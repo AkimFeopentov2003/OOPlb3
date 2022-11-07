@@ -1,0 +1,3 @@
+# Format description can be found here: https://git-scm.com/docs/gitignore
+
+cmake-build-*

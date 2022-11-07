@@ -1,5 +1,0 @@
-Down: f
-UP: ks
-Left: d
-Right: g
-Esc: l
