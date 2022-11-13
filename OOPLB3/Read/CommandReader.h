@@ -4,13 +4,20 @@
 #include "iostream"
 #ifndef UNTITLED2_COMMANDREADER_H
 #define UNTITLED2_COMMANDREADER_H
+#include "CommandMap.h"
+#include "CommandFile.h"
+#include "../Log/Observable.h"
 
-
-class CommandReader{
-    char command;
+class CommandReader:public Observable{
+    CommandMap *cf = new CommandFile("Command.txt");
+    std::map<std::string , CommandType> map;
+    std::string command;
 public:
-    char getCommand()const;
+
+    CommandType getCommand()const;
     void read();
+    void setMap();
+    ~CommandReader();
 };
 
 

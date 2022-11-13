@@ -3,53 +3,52 @@
 //
 
 #include "LogConfigurator.h"
-#include "LoggerPool.h"
-#include <iostream>
 
-LogConfigurator::LogConfigurator(Level * cont) : level(cont) {}
+LogConfigurator::LogConfigurator(Level *cont) : level(cont) {}
 
 void LogConfigurator::configure() {
-    char choice=' ';
-    Logger* logger;
-    while(choice!='0'){
-        std::cout
-                << "Добавить ConsolLogger, нажмите 1\n"
-                   "Добавить FileLogger, нажмите 2\n"
-                   "Ничего не добавлять, нажмите 0 \n ";
+    char choice = ' ';
+    std::cout << "Добавить Console, нажмите 1\n";
+    std::cout << "Добавить File, нажмите 2\n";
+    std::cout << "Добавить в File и в Console, нажмите 3\n";
+    std::cout << "Ничего не добавлять, нажмите 0\n";
+    std::cin >> choice;
+    std::cin.ignore(1251, '\n');
+    while (choice<'0' || choice>'3') {
+        std::cout << "Ошибка ввода, повторите ввод \n";
         std::cin >> choice;
-        std::cin.ignore(1251, '\n');;
-        while (choice < '0' || choice > '2') {
-            std::cout << "Ошибка ввода, повторите ввод \n";
-            std::cin >> choice;
-            std::cin.ignore(1251, '\n');
-        }
-        if (choice == '1') {
+        std::cin.ignore(1251, '\n');
+    }
+    if (choice == '1'|| choice == '2') {
+        if(choice == '1'){
             std::cout << "Логи выводятся в консоли \n";
-            logger = new ConsoleLogger;
-            configureLevels(logger);
-            level->subscribe(logger);
-            LoggerPool::getInstance().addLogger(logger);
+            Logger* loggerC = new ConsoleLogger;
+            configureLevels(loggerC);
+            level->subscribe(loggerC);
+            LoggerPool::getInstance().addLogger(loggerC);
         }
-        else if(choice == '2'){
+        else{
             std::cout << "Логи записываются в файл log.txt \n";
-            logger=new FileLogger("log.txt");
-            configureLevels(logger);
-            level->subscribe(logger);
-            LoggerPool::getInstance().addLogger(logger);
+            Logger* loggerF = new FileLogger("log.txt");
+            configureLevels(loggerF);
+            level->subscribe(loggerF);
+            LoggerPool::getInstance().addLogger(loggerF);
         }
-        std::cout<<"Выйти нажмите 0, остаться и подписать что-нибудь ещё нажмите 1\n";
-        std::cin >> choice;
-        std::cin.ignore(1251, '\n');;
-        while (choice < '0' || choice > '1') {
-            std::cout << "Ошибка ввода, повторите ввод \n";
-            std::cin >> choice;
-            std::cin.ignore(1251, '\n');
-        }
+    } else if (choice == '3') {
+        std::cout << "Логи выводятся в консоль и в файл \n";
+        Logger* loggerC = new ConsoleLogger;
+        configureLevels(loggerC);
+        level->subscribe(loggerC);
+        Logger* loggerF = new FileLogger("log.txt");
+        loggerF->copyLogger(loggerC);
+        level->subscribe(loggerF);
+        LoggerPool::getInstance().addLogger(loggerC);
+        LoggerPool::getInstance().addLogger(loggerF);
     }
 
 }
 
-void LogConfigurator::configureLevels(Logger * logger) {
+void LogConfigurator::configureLevels(Logger *logger) {
     char cur = ' ';
     while (cur != '0') {
         if (!logger->logTypeAvailable(LogType::ObjectState))
@@ -58,8 +57,9 @@ void LogConfigurator::configureLevels(Logger * logger) {
             std::cout << "Хотите подписать GameState нажмите 2\n";
         if (!logger->logTypeAvailable(LogType::CriticalState))
             std::cout << "Хотите подписать CriticalState нажмите 3\n";
-        std::cout<<"Оставить так и выйти из подписи уровней, нажмите 0\n";
-        std::cin >> cur;std::cin.ignore(1251, '\n');
+        std::cout << "Оставить так и выйти из подписи уровней, нажмите 0\n";
+        std::cin >> cur;
+        std::cin.ignore(1251, '\n');
         switch (cur) {
             case '0':
                 break;

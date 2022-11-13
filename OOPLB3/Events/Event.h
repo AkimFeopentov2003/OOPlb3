@@ -6,7 +6,6 @@
 #define UNTITLED2_EVENT_H
 
 class Event;
-#include "../Log/LogManager.h"
 #include "../Map/Field.h"
 #include "../Log/Observable.h"
 

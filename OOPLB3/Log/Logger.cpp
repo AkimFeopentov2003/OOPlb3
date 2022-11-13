@@ -22,3 +22,8 @@ bool Logger::logTypeAvailable(const LogType &type) const {
         if (type == t) return true;
     return false;
 }
+
+void Logger::copyLogger(Logger *other) {
+    for(LogType log_t : other->m_types)
+        m_types.push_back(log_t);
+}

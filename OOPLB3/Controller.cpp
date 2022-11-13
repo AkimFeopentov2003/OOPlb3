@@ -4,38 +4,58 @@
 
 #include "Controller.h"
 #include "Log/message.h"
-#include "Log/ConsolLogger.h"
-#include "Log/LogConfigurator.h"
-#include "Log/LoggerPool.h"
 
 
 Controller::Controller(CommandReader &cur, Field &field) {
+    map.emplace(CommandType::DOWN, [](int &first, int &second) {
+        return ++first;
+    });
+    map.emplace(CommandType::UP, [](int &first, int &second) {
+        return --first;
+    });
+    map.emplace(CommandType::LEFT, [](int &first, int &second) {
+        return --second;
+    });
+    map.emplace(CommandType::RIGHT, [](int &first, int &second) {
+        return ++second;
+    });
 }
 
 void Controller::action(CommandReader &cur, Field &field) {
-    char order = cur.getCommand();
+    CommandType order = cur.getCommand();
     std::pair<int, int> newPosition;
     newPosition.first = field.getPlayerPosY();
     newPosition.second = field.getPlayerPosX();
-    switch (order) {
-        case 'w':
-            newPosition.first--;
-            break;
-        case 's':
-            newPosition.first++;
-            break;
-        case 'a':
-            newPosition.second--;
-            break;
-        case 'd':
-            newPosition.second++;
-            break;
-        case 'l':
+    if(order==CommandType::ESC || order == CommandType::ERROR){
+        if(order == CommandType::ESC)
             notify(Message(LogType::GameState, "Game end"));
-            break;
-        default:
+        else{
             notify(Message(LogType::CriticalState, "Wrong command"));
+        }
     }
+    else{
+        map[order](newPosition.first,newPosition.second);
+    }
+//    switch (order) {
+//        case CommandType::UP:
+//            newPosition.first--;
+//            break;
+//        case CommandType::DOWN:
+//            newPosition.first++;
+//            break;
+//        case CommandType::LEFT:
+//            newPosition.second--;
+//            break;
+//        case CommandType::RIGHT:
+//            newPosition.second++;
+//            break;
+//        case CommandType::ESC:
+//            notify(Message(LogType::GameState, "Game end"));
+//            break;
+//        case CommandType::ERROR:
+//            notify(Message(LogType::CriticalState, "Wrong command"));
+//            break;
+//    }
     newPosition.first =
             (newPosition.first % field.get_amountCellsY() + field.get_amountCellsY()) % field.get_amountCellsY();
     newPosition.second =
@@ -49,7 +69,7 @@ void Controller::action(CommandReader &cur, Field &field) {
                        "Player changed position " + std::to_string(field.getPlayerPosY()) + " " +
                        std::to_string(field.getPlayerPosX())));
     } else {
-        if(field.get_map()[newPosition.first][newPosition.second].get_characteristic() == STONE)
+        if (field.get_map()[newPosition.first][newPosition.second].get_characteristic() == STONE)
             notify(Message(LogType::CriticalState, "player tries to pass through stone!"));
     }
 }

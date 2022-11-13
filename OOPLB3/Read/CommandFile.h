@@ -10,13 +10,14 @@
 
 class CommandFile: public CommandMap{
     std::ifstream file;
-    std::vector<std::string> strType;
-    std::map<char,CommandType> mapLocal;
+    std::map<std::string,CommandType> strType;
+    std::map<std::string,CommandType> mapLocal;
 public:
-    CommandFile();
-    bool get_map(std::map<char,CommandType> &map);
-    void prov_string(std::string str);
+    CommandFile(const std::string &nameFile);
+    bool get_map(std::map<std::string ,CommandType> &map);
+    void checkString(std::string str);
     void delete_space(std::string &str);
+    ~CommandFile();
 };
 
 

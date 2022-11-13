@@ -6,6 +6,11 @@
 #define UNTITLED2_LOGCONFIGURATOR_H
 
 #include "../Game/Level.h"
+#include "Logger.h"
+#include "LoggerPool.h"
+#include <iostream>
+#include "ConsolLogger.h"
+#include "FileLogger.h"
 
 class LogConfigurator {
 public:

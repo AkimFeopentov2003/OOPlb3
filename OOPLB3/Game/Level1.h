@@ -17,7 +17,6 @@
 #include "../Events/EventStateWin.h"
 #include "../Events/EventPlayerHPDec.h"
 #include "../Events/EventPlayerHPInc.h"
-#include "../Log/LogManager.h"
 
 class Level1: public Level {
 public:

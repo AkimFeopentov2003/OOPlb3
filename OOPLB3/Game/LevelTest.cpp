@@ -15,10 +15,11 @@ void LevelTest::start() {
 
 void LevelTest::gameCurrent(Field &field) {
     CommandReader curRead;
+    curRead.setMap();
     Controller Control = Controller(curRead, field);
     FieldView painting = FieldView(field);
     painting.Field_write(field);
-    while (curRead.getCommand() != 'l') {
+    while (curRead.getCommand() != CommandType::ESC) {
         curRead.read();
         Control.action(curRead, field);
         std::system("clear");

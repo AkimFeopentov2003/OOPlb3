@@ -92,11 +92,13 @@ void Level1::start() {
 
 void Level1::gameCurrent(Field &field) {
     CommandReader curRead;
-    Controller Control = Controller(curRead, field);
+    curRead.copySubscriptions(this);
+    curRead.setMap();
+    Controller Control(curRead, field);
     Control.copySubscriptions(this);
     FieldView painting = FieldView(field);
     painting.Field_write(field);
-    while (curRead.getCommand() != 'l') {
+    while (curRead.getCommand() != CommandType::ESC) {
         curRead.read();
         Control.action(curRead, field);
         std::system("clear");

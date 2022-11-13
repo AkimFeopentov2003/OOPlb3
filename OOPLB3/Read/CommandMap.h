@@ -7,10 +7,11 @@
 #include <map>
 #include "CommandType.h"
 #include "../Log/Observable.h"
+#include <string>
 
 class CommandMap: public Observable{
 public:
-    virtual bool get_map(std::map<char,CommandType> &map)=0;
+    virtual bool get_map(std::map<std::string ,CommandType> &map)=0;
 };
 
 

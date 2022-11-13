@@ -11,16 +11,20 @@
 #define UNTITLED2_CONTROLER_H
 
 #include "Log/FileLogger.h"
-
-
+#include "Read/CommandFile.h"
+#include <map>
+#include "Read/CommandType.h"
+#include "functional"
 
 class Controller : public Observable {
+    std::map<CommandType,std::function<int (int&,int&)>> map;
 public:
-    Controller(CommandReader &cur,Field &field);
-    void action(CommandReader &cur,Field &field);
+    Controller(CommandReader &cur, Field &field);
+
+    void action(CommandReader &cur, Field &field);
+
     ~Controller();
-private:
-    Logger *f;
+
 };
 
 

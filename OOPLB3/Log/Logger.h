@@ -15,6 +15,7 @@ public:
     }
     bool logTypeAvailable(const LogType &type) const;
     void addLogType(const LogType &type);
+    void copyLogger(Logger *other);
     void deleteLogType(const LogType &type);
     virtual ~Logger() = default;
 };
