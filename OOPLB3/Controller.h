@@ -17,7 +17,7 @@
 #include "functional"
 
 class Controller : public Observable {
-    std::map<CommandType,std::function<int (int&,int&)>> map;
+    std::map<CommandType,std::function<void (int&,int&)>> map;
 public:
     Controller(CommandReader &cur, Field &field);
 

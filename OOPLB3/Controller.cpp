@@ -8,16 +8,22 @@
 
 Controller::Controller(CommandReader &cur, Field &field) {
     map.emplace(CommandType::DOWN, [](int &first, int &second) {
-        return ++first;
+        ++first;
     });
     map.emplace(CommandType::UP, [](int &first, int &second) {
-        return --first;
+        --first;
     });
     map.emplace(CommandType::LEFT, [](int &first, int &second) {
-        return --second;
+        --second;
     });
     map.emplace(CommandType::RIGHT, [](int &first, int &second) {
-        return ++second;
+        ++second;
+    });
+    map.emplace(CommandType::ESC, [this](int &first, int &second) {
+        notify(Message(LogType::GameState, "Game end"));
+    });
+    map.emplace(CommandType::ERROR, [this](int &first, int &second) {
+        notify(Message(LogType::CriticalState, "Wrong command"));
     });
 }
 
@@ -26,16 +32,7 @@ void Controller::action(CommandReader &cur, Field &field) {
     std::pair<int, int> newPosition;
     newPosition.first = field.getPlayerPosY();
     newPosition.second = field.getPlayerPosX();
-    if(order==CommandType::ESC || order == CommandType::ERROR){
-        if(order == CommandType::ESC)
-            notify(Message(LogType::GameState, "Game end"));
-        else{
-            notify(Message(LogType::CriticalState, "Wrong command"));
-        }
-    }
-    else{
-        map[order](newPosition.first,newPosition.second);
-    }
+    map[order](newPosition.first,newPosition.second);
 //    switch (order) {
 //        case CommandType::UP:
 //            newPosition.first--;
